@@ -1,7 +1,3 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,21 +6,17 @@ and open the template in the editor.
         <script src="/index.js">
         </script>
     </head>
-    
-    
-    
     <body>
-        <div id="topic1">TODO write content111</div>
-        <input type="text" value="Submit" id="input1"/>
-        <button id="send">Send</button>
-
-	<br><br><br>
-
-	<label for="topic">Topic (140 character limit)</label>
-	<input type="text" id="topic" name="topic" maxlength="140" /><br>
-	<label for="link">Topic Link</label>
-	<input type="text" id="addlink" name="link" /><br>
-	<div id='topiclist'> List of Topics </div>
-	<button id='add'>Add My Topic </button>
+	<br>
+	<textarea id="topic" rows="4" cols="50" maxlength="140">Enter topic (140 character limit)</textarea>
+	<br>
+	<input type="text" id="addlink" name="link" value="Provide link"/><br><br>
+	<button id="add" onclick="addTopic()">Add My Topic </button>
+	<div id='topiclist'>
+	    <h1>Topics</h1>
+	    <script>
+	      loadTopics()
+	    </script>
+	</div>
     </body>
 </html>

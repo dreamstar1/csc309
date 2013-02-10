@@ -7,14 +7,15 @@
 http = require('http');
 fs = require('fs');
 path = require('path');
+var qs = require('querystring');
 
 PORT = 31410;
 
 
-var topicsDatabase = {
+var JSONDatabase = {
     "Topics": [
-                {"Title" : "HEY TEST ONE"},
-                {"Title" : "TEST 2"}
+                {"Title" : "INTERESTING", "Link" : "google.com", "Vote" : "1"},
+                {"Title" : "AWESOME STUFF", "Link" : "reddit.com", "Vote" : "2"}
     ]
 }
    
@@ -64,23 +65,23 @@ http.createServer(function(request, response) {
   else if (request.url == '/inc') {
         vote++;
   } 
-  else if (request.url == '/postTopic'){
-      request.on('data', function(chunk){
-      console.log("chunk");
+  else if (request.method == 'POST'){
+    if (request.url == '/postTopic'){
+      var topicQuery = "";
+      request.on('data', function(data){
+	topicQuery += data;
       });
-            
+      request.on('end', function(){
+	JSONDatabase.Topics.push(qs.parse(topicQuery));
+      });
+    }       
   } 
   else if (request.url == '/jsonall'){
       if (request.method == 'GET') {
-            var len = topicsDatabase.Topics.length;
-            var data = '';
             response.writeHead(200, {
                 'Content-Type':'text/plain'
             });
-            for (var i=0;i<len;i++){
-                data += JSON.stringify(topicsDatabase.Topics[i]) + ';';
-            }
-            response.end(data);
+            response.end(JSON.stringify(JSONDatabase));
       }
   }
   else {
