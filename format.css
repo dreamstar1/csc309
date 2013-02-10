@@ -1,0 +1,36 @@
+body {
+	background-color:black;
+}
+
+#assignment1 {
+	width:1000px;
+	margin-top:5px;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:100%;
+	color:white;
+}
+
+#newtopic { float:right;}
+
+#topics {float:left;}
+
+.topic {font-size:30px;}
+.link {font-size:15px; color:white;}
+.vote {text-align:left; font-size:10px;}
+.reply {font-size:10px;text-decoration:underline;}
+.reply:hover{
+	color:yellow;
+	text-decoration:underline;
+	cursor:hand;
+	cursor:pointer;
+}
+input {
+	display:block;
+	margin-top:10px;
+	width:300px;
+}
+
+input[type="button"] {
+	width:auto;
+}
