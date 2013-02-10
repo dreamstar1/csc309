@@ -1,23 +1,10 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 http = require('http');
 fs = require('fs');
 path = require('path');
 
-PORT = 31410;
+PORT = 31365;
 
-
-var topicsDatabase = {
-    "Topics": [
-                {"Title" : "HEY TEST ONE"},
-                {"Title" : "TEST 2"}
-    ]
-}
-   
+STATIC_PREFIX = '/static/';
 
 MIME_TYPES = {
   '.html': 'text/html',
@@ -26,10 +13,11 @@ MIME_TYPES = {
   '.txt': 'text/plain'
 };
 
-var vote = 0;
+var topics = [];
 var count = 0;
+
 function serveFile(filePath, response) {
-  path.exists(filePath, function(exists) {
+  fs.exists(filePath, function(exists) {
     if (!exists) {
       response.writeHead(404);
       response.end();
@@ -52,42 +40,53 @@ function serveFile(filePath, response) {
   });
 }
 
-
 http.createServer(function(request, response) {
   console.log(request.url);
-  if (request.url == '/') {
-    serveFile('./index.html', response);
-  }
-  else if (request.url == '/index.js') {
-    serveFile('./index.js', response);
-  } 
-  else if (request.url == '/inc') {
-        vote++;
-  } 
-  else if (request.url == '/postTopic'){
-      request.on('data', function(chunk){
-      console.log("chunk");
-      });
-            
-  } 
-  else if (request.url == '/jsonall'){
-      if (request.method == 'GET') {
-            var len = topicsDatabase.Topics.length;
-            var data = '';
-            response.writeHead(200, {
-                'Content-Type':'text/plain'
-            });
-            for (var i=0;i<len;i++){
-                data += JSON.stringify(topicsDatabase.Topics[i]) + ';';
-            }
-            response.end(data);
-      }
-  }
-  else {
-    response.writeHead(404);
-    response.end('Resource not found.');
+  if (request.url.indexOf(STATIC_PREFIX) == 0) {
+		//reuse code from C2.
+		var cache = {'/static':''};
+		fs.realpath(request.url, cache, function(err, resolvedPath){
+			fs.readFile(resolvedPath, function(err,data) {
+				response.writeHead(200);
+				response.end(data);
+			});
+		});
+  } else {
+    switch(request.url){
+	case '/':
+		serveFile('./index.html', response); break;
+	case '/index.js':
+ 		serveFile('./index.js', response); break;
+	case '/format.css':
+		serveFile('./format.css', response); break;
+	case '/newtopic':
+		if (request.method == 'POST') {
+			var topic = '';
+			request.on('data', function(buf) {
+				topic += buf;
+			});
+			request.on('end', function() {
+				response.writeHead(200);
+				response.end();
+				topics[count] = JSON.parse(topic);
+				count++;
+			});
+		} else {
+			response.writeHead(405);
+		} break;
+	case '/json':
+		if (request.method == "GET") {
+			response.writeHead(200, {'Content-Type':'application/json'});
+			response.end(JSON.stringify(topics[count - 1]));
+		} else {
+			response.wirteHead(405);
+		}
+		break;
+	default:
+		response.writeHead(404);
+		response.end('Not Found');  
+	}
   }
 }).listen(PORT);
 
 console.log('Server running at http://127.0.0.1:' + PORT + '/');
-
