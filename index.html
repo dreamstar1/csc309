@@ -1,30 +1,23 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
 <html>
-    <head>
-        <script src="http://code.jquery.com/jquery-1.9.1.min.js">
-        </script>
-        <script src="/index.js">
-        </script>
-    </head>
-    
-    
-    
-    <body>
-        <div id="topic1">TODO write content111</div>
-        <input type="text" value="Submit" id="input1"/>
-        <button id="send">Send</button>
-
-	<br><br><br>
-
-	<label for="topic">Topic (140 character limit)</label>
-	<input type="text" id="topic" name="topic" maxlength="140" /><br>
-	<label for="link">Topic Link</label>
-	<input type="text" id="addlink" name="link" /><br>
-	<div id='topiclist'> List of Topics </div>
-	<button id='add'>Add My Topic </button>
-    </body>
+  <head>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="/index.js"></script>
+	<link href="/format.css" rel="stylesheet" />
+  </head>
+  
+  <body>
+	<div id="assignment1">
+		<div id="newtopic">
+			<label for="topic">Topic (140 character limit)</label>
+			<input type="text" id="topictitle" name="topic" maxlength="140" /><br>
+			<label for="link">Topic Link</label>
+			<input type="text" id="addlink" name="link" /><br>
+			<button id="add">Add New Topic </button>
+		</div>
+		<div id="topics"> 
+			<h2>This is new Topic</h2>
+			<ol id="topiclist"></ol>
+		</div>
+	</div>
+  </body>
 </html>
