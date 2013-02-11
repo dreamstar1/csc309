@@ -13,7 +13,6 @@ function loadReplies(topicId){
 	recurse(topicId, value);
     });
   });
- ;
 }
 
 
