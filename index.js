@@ -47,38 +47,33 @@ function addReply(e) {
 	var replyInfo = document.getElementById(id);
 	var querystring = "ID="+e+"&Reply="+replyInfo.value;
 	$.post('/postComment', querystring);
-	loadTopic(e);
 	loadReplies(e.split('-')[0]);
 }
 
 function refreshPage(){
-  alert("refresh");
   $.get('/alltopics', function (json) {
       var parsed = $.parseJSON(json).Topics;
       $('#topiclist').empty();
-      $.each(parsed, function(index, value){
-	loadTopic(index);
-      });
+      for(var i=0; i<parsed.length; i++){
+	loadTopic(i, parsed);
+      }
   });
 }
 
-function loadTopic(e) {	
-    $.get('/alltopics', function (json) {
-	var parsed = $.parseJSON(json).Topics;
-	$('#'+e).remove();
-	$('#topiclist').append('<div id =' +e+ ' class="topic">'+parsed[e].Title+'</div>');
-	$('#'+e).append('<a class="link" href="'+parsed[e].Link+'">('+parsed[e].Link+')</a>');
-	$('#'+e).append('<div id="vote" class="vote"> '+parsed[e].Vote+' votes </div>');
-	$('#'+e).append('<div id="replyButton' +e+'"onclick=showCommentBox("'+e+'") class="reply">Reply</div>');
-	$('#'+e).append('<div id="commentButton'+e+'"onclick=loadReplies("'+e+'") class="commentButton">comments</div>');
-	$('#'+e).append('<div id="commentSection'+e+'"></div>');
-   });
-};
+function loadTopic(e, parsed) {	
+	$('#'+parsed[e].ID).remove();
+	$('#topiclist').append('<div id =' +parsed[e].ID+ ' class="topic">'+parsed[e].Title+'</div>');
+	$('#'+parsed[e].ID).append('<a class="link" href="'+parsed[e].Link+'">('+parsed[e].Link+')</a>');
+	$('#'+parsed[e].ID).append('<div id="vote" class="vote"> '+parsed[e].Vote+' votes </div>');
+	$('#'+parsed[e].ID).append('<div id="replyButton' +parsed[e].ID+'"onclick=showCommentBox("'+parsed[e].ID+'") class="reply">Reply</div>');
+	$('#'+parsed[e].ID).append('<div id="commentButton'+parsed[e].ID+'"onclick=loadReplies("'+parsed[e].ID+'") class="commentButton">comments</div>');
+	$('#'+parsed[e].ID).append('<div id="commentSection'+parsed[e].ID+'"></div>');
+}
 
 function addTopic(){
 	$.get('/alltopics', function (json) {
-	  var parsed = $.parseJSON(json);
-	  var len = parsed.Topics.length;
+	  var parsed = $.parseJSON(json).Topics;
+	  var len = parsed.length;
 	  var topicTitle = document.getElementById("topic");
 	  var link = document.getElementById("addlink");
 	  if (link.value == ''){
@@ -92,7 +87,7 @@ function addTopic(){
 	    var querystring = "ID="+len+"&Title="+topicTitle.value+"&Link="+link.value; 
 	    $.post('/postTopic', querystring);
 	    refreshPage();
-	    loadTopic(len);
+	    loadTopic(len, parsed);
 	  }
 	});  
 };

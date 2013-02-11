@@ -108,7 +108,7 @@ http.createServer(function(request, response) {
 	      "replies" : []
 	};
 	allReplies.replies.push(child);
-	response.end(JSON.stringify(allReplies));
+	response.end(JSON.stringify(JSONDatabase.Topics));
       });
     }
   } 
