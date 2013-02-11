@@ -1,25 +1,45 @@
 var topicCount = 0;
-
 function showBox(e) {
-	var id = "replybox"+e;
+	var id = "replybox" + e;
 	var box = document.getElementById(id);
 	box.style.visibility="visible";
 }
 function showBut(e) {
-	var id = "replybutton"+e;
+	var id = "replybutton" + e;
 	var button = document.getElementById(id);
 	button.style.visibility="visible";
 }
 
 function addReply(e) {
-	var id = "replybox"+e
+	var id = "replybox" + e
 	var replyInfo = document.getElementById(id);
 	var querystring = "ID="+e+"&Reply="+replyInfo.value;
 	$.post('/postComment', querystring);
 }
 
+function recurse(ID, sublist){
+  if (sublist.length == 0){
+    return;
+  }
+  else{
+    $('#'+ID).append('<div id='+sublist.ID+'>'+sublist.Text+'</div><br><br>');
+    recurse(sublist.ID, sublist.replies);
+  }
+}
+function loadReplies(topicId){
+  var path = '/comments' + topicId;
+  $.get(path, function (json){
+    var parsed = $.parseJSON(json);
+    var id = 'commentSection'+topicId;
+    $('#'+id).empty();
+    $.each(parsed, function(index, value){
+      recurse(id, value);
+    });
+  });
+}
+
 function loadTopics() {	
-    $.get('/jsonall', function (json) {
+    $.get('/alltopics', function (json) {
       var parsed = $.parseJSON(json);
       $('#topiclist').empty();
       $.each(parsed.Topics, function(index, value){
@@ -27,8 +47,10 @@ function loadTopics() {
 	$('#'+value.ID).append('<a class="link" href="'+value.Link+'">('+value.Link+')</a>');
 	$('#'+value.ID).append('<div id="vote"> '+value.Vote+' votes </div>');
 	$('#'+value.ID).append('<span id= "reply'+value.ID+' "onclick=showBox('+value.ID+');showBut('+value.ID+') class="reply">Reply</span>');
-	$('#'+value.ID).append('<button id="replybutton'+value.ID+'"onclick=addReply('+value.ID+') style="visibility:hidden">Post</button>');
-	$('#'+value.ID).append('<input type="textarea" id="replybox'+value.ID+'"rows="100" cols="200" style="visibility:hidden" value=Reply here class="replybox"><br><br>');
+	$('#'+value.ID).append('<button id="replybutton'+value.ID+'"onclick=addReply('+value.ID+');loadReplies('+value.ID+') style="visibility:hidden">Post</button>');
+	$('#'+value.ID).append('<input type="textarea" id="replybox'+value.ID+'"rows="100" cols="200" style="visibility:hidden" value=Reply here class="replybox">');
+	$('#'+value.ID).append('<span id="comments'+value.ID+'"onclick=loadReplies('+value.ID+')>comments</span>');
+	$('#'+value.ID).append('<div id="commentSection'+value.ID+'"></div>');
       });
    });
 };
@@ -52,7 +74,3 @@ function addTopic(){
 	
 };
 
-
-
-
-    

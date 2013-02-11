@@ -1,4 +1,21 @@
-body {
-	background-color:black;
-}
+body{ background-color: teal;} 
+p { color: blue; } 
+h3{ color: white; }
 
+
+#assignment1 {
+	width:1000px;
+	margin-top:20px;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:100%;
+	color:Black;
+}
+#topics{float:right;}
+.link {font-size:15px; color:blue;}
+.link:hover{
+	color:purple;
+	text-decoration:underline;
+	cursor:hand;
+	cursor:pointer;
+}

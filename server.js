@@ -21,7 +21,8 @@ var JSONDatabase = {
       
       
       {"ID":"13", "Title":"AWESOME STUFF", "Link":"reddit.com", "Vote":"2", "replies":[]}
-    ]
+    ],
+    "ServerCount" : 0
 }
    
 
@@ -66,10 +67,13 @@ http.createServer(function(request, response) {
   }
   else if (request.url == '/index.js') {
     serveFile('./index.js', response);
-  } 
+  }
+  else if (request.url == '/format.css') {
+	serveFile('./format.css', response); 
+  }
   else if (request.url == '/inc') {
         vote++;
-  } 
+  }
   else if (request.method == 'POST'){
     if (request.url == '/postTopic'){
       var topicQuery = "";
@@ -79,6 +83,7 @@ http.createServer(function(request, response) {
       request.on('end', function(){
 	JSONDatabase.Topics.push(qs.parse(topicQuery));
       });
+      JSONDatabase.ServerCount++;
     }
     else if (request.url == '/postComment'){
       var commentQuery = "";
@@ -98,19 +103,26 @@ http.createServer(function(request, response) {
 	for (i=0; i<allTopics.length; i++){
 	  if (allTopics[i].ID == content.ID){
 	    allTopics[i].replies.push(child);
-	    console.log(allTopics[i].replies);
 	  }
 	}
       });
     }
   } 
-  else if (request.url == '/jsonall'){
-      if (request.method == 'GET') {
-            response.writeHead(200, {
-                'Content-Type':'text/plain'
-            });
-            response.end(JSON.stringify(JSONDatabase));
+  else if (request.url == '/alltopics')  {
+    response.writeHead(200, {'Content-Type':'text/plain'});
+    response.end(JSON.stringify(JSONDatabase));
+  }
+  else if (request.url.substring(0,9) == '/comments'){
+    var topicID = request.url.substring(9);
+    response.writeHead(200, {'Content-Type':'text/plain'});
+    var allTopics = JSONDatabase.Topics;
+    var i = 0;
+    for (i=0; i<allTopics.length; i++){
+      if (allTopics[i].ID == topicID){
+	response.end(JSON.stringify(allTopics[i].replies));
+	console.log(JSON.stringify(allTopics[i].replies));
       }
+    }            
   }
   else {
     response.writeHead(404);
