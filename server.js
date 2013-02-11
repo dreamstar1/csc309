@@ -15,14 +15,14 @@ PORT = 31410;
 var JSONDatabase = {
     "Topics": 
     [
-//       {"ID":"12", "Title":"INTERESTING", "Link":"google.com", "Vote":"1", "replies":[
-// 	{"Text":"aaa","ID":"12x0","Vote":"0","replies":[{"Text":"bbb","ID":"12x0x0","Vote":"0","replies":[]}]}
+//       {"ID":"0", "Title":"INTERESTING", "Link":"google.com", "Vote":"1", "replies":[
+// 	{"Text":"0x0","ID":"0-0","Vote":"0","replies":[{"Text":"0x0x0","ID":"0-0-0","Vote":"0","replies":[{"Text":"0x0x0x0","ID":"0-0-0-0","Vote":"0","replies":[]}]},{"Text":"0x0x1","ID":"0-0-1","Vote":"0","replies":[]}]},{"Text":"0x1","ID":"0-1","Vote":"0","replies":[]}
+// 
 //       ]},
 //       
 //       
 //       {"ID":"13", "Title":"AWESOME STUFF", "Link":"reddit.com", "Vote":"2", "replies":[]}
-    ],
-    "ServerCount" : 0
+    ]
 }
    
 
@@ -33,8 +33,6 @@ MIME_TYPES = {
   '.txt': 'text/plain'
 };
 
-var vote = 0;
-var count = 0;
 function serveFile(filePath, response) {
   path.exists(filePath, function(exists) {
     if (!exists) {
@@ -86,10 +84,9 @@ http.createServer(function(request, response) {
 	  "Link" : str.Link,
 	  "Vote" : 0,
 	  "replies" : []
-	}
+	};
 	JSONDatabase.Topics.push(newNode);
       });
-      JSONDatabase.ServerCount++;
     }
     else if (request.url == '/postComment'){
       var commentQuery = "";
@@ -104,15 +101,14 @@ http.createServer(function(request, response) {
 	for (i=1; i<pathIndex.length; i++){
 	  allReplies = allReplies.replies[pathIndex[i]];
 	}
-	console.log(allReplies);
-	    var child = {
+	var child = {
 	      "Text" : content.Reply,
 	      "ID" : content.ID+ "-" +allReplies.replies.length,
-	      "Vote" : "0",
+	      "Vote" : 0,
 	      "replies" : []
-	    };
-	    allReplies.replies.push(child);
-	    console.log(allTopics);
+	};
+	allReplies.replies.push(child);
+	response.end(JSON.stringify(allReplies));
       });
     }
   } 
@@ -128,7 +124,7 @@ http.createServer(function(request, response) {
     for (i=0; i<allTopics.length; i++){
       if (allTopics[i].ID == topicID){
 	response.end(JSON.stringify(allTopics[i].replies));
-	console.log(JSON.stringify(allTopics[i].replies));
+	console.log(JSON.stringify(allTopics));
       }
     }            
   }

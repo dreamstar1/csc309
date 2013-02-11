@@ -1,8 +1,9 @@
-// TODO: Implement Multilevel Comment, Vote increment, Sort topics based on votes
+// TODO: Implement Vote increment, Sort topics based on votes
 
 var topicCount = 0;
 
 function loadReplies(topicId){
+  hideCommentBox();
   var path = '/comments' + topicId;
   $.get(path, function (json){
     var parsed = $.parseJSON(json);
@@ -12,7 +13,9 @@ function loadReplies(topicId){
 	recurse(topicId, value);
     });
   });
+ ;
 }
+
 
 function recurse(ID, sublist){
   if (sublist.ID==undefined){
@@ -29,8 +32,12 @@ function recurse(ID, sublist){
   }
 }
 
-function showCommentBox(id){
+function hideCommentBox(){
   $('#active').remove();
+}
+
+function showCommentBox(id){
+  hideCommentBox();
   $('#'+id).append('<div id="active"></div>'); 
   $('#active').append('<button id="replybutton" onclick=addReply("'+id+'")>Post</button>');
   $('#active').append('<textarea id="replybox" rows="2" cols="50"></textarea>');
@@ -41,40 +48,52 @@ function addReply(e) {
 	var replyInfo = document.getElementById(id);
 	var querystring = "ID="+e+"&Reply="+replyInfo.value;
 	$.post('/postComment', querystring);
-	var topicId = e.split('-')[0];
-	loadReplies(topicId);
+	loadTopic(e);
+	loadReplies(e.split('-')[0]);
 }
 
-function loadTopics() {	
-    $.get('/alltopics', function (json) {
-      var parsed = $.parseJSON(json);
+function refreshPage(){
+  alert("refresh");
+  $.get('/alltopics', function (json) {
+      var parsed = $.parseJSON(json).Topics;
       $('#topiclist').empty();
-      $.each(parsed.Topics, function(index, value){
-	$('#topiclist').append('<div id =' +value.ID+ ' class="topic">'+value.Title+'</div>');
-	$('#'+value.ID).append('<a class="link" href="'+value.Link+'">('+value.Link+')</a>');
-	$('#'+value.ID).append('<div id="vote" class="vote"> '+value.Vote+' votes </div>');
-	$('#'+value.ID).append('<div id="replyButton' +value.ID+'"onclick=showCommentBox("'+value.ID+'") class="reply">Reply</div>');
-	$('#'+value.ID).append('<div id="commentButton'+value.ID+'"onclick=loadReplies("'+value.ID+'") class="commentButton">comments</div>');
-	$('#'+value.ID).append('<div id="commentSection'+value.ID+'"></div>');
+      $.each(parsed, function(index, value){
+	loadTopic(index);
       });
+  });
+}
+
+function loadTopic(e) {	
+    $.get('/alltopics', function (json) {
+	var parsed = $.parseJSON(json).Topics;
+	$('#'+e).remove();
+	$('#topiclist').append('<div id =' +e+ ' class="topic">'+parsed[e].Title+'</div>');
+	$('#'+e).append('<a class="link" href="'+parsed[e].Link+'">('+parsed[e].Link+')</a>');
+	$('#'+e).append('<div id="vote" class="vote"> '+parsed[e].Vote+' votes </div>');
+	$('#'+e).append('<div id="replyButton' +e+'"onclick=showCommentBox("'+e+'") class="reply">Reply</div>');
+	$('#'+e).append('<div id="commentButton'+e+'"onclick=loadReplies("'+e+'") class="commentButton">comments</div>');
+	$('#'+e).append('<div id="commentSection'+e+'"></div>');
    });
 };
 
 function addTopic(){
-	var topicTitle = document.getElementById("topic");
-	var link = document.getElementById("addlink");
-	if (link.value == ''){
-	  alert("Please enter link");
-	}
-	else if (link.value.substring(0, 7) !== 'http://' &&
-		 link.value.substring(0, 8) !== 'https://'){
-	  alert("Please provide a valid http link");
-	}
-	else{
-	  var querystring = "ID="+topicCount+"&Title="+topicTitle.value+"&Link="+link.value; 
-	  $.post('/postTopic', querystring);
-	  topicCount++;
-	  loadTopics();
-	}
-	
+	$.get('/alltopics', function (json) {
+	  var parsed = $.parseJSON(json);
+	  var len = parsed.Topics.length;
+	  var topicTitle = document.getElementById("topic");
+	  var link = document.getElementById("addlink");
+	  if (link.value == ''){
+	    alert("Please enter link");
+	  }
+	  else if (link.value.substring(0, 7) !== 'http://' &&
+		  link.value.substring(0, 8) !== 'https://'){
+	    alert("Please provide a valid http link");
+	  }
+	  else{
+	    var querystring = "ID="+len+"&Title="+topicTitle.value+"&Link="+link.value; 
+	    $.post('/postTopic', querystring);
+	    refreshPage();
+	    loadTopic(len);
+	  }
+	});  
 };
