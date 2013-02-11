@@ -1,3 +1,6 @@
+// TODO: Implement Multilevel Comment, Vote increment, Sort topics based on votes
+
+
 var topicCount = 0;
 function showBox(e) {
 	var id = "replybox" + e;
@@ -46,10 +49,10 @@ function loadTopics() {
 	$('#topiclist').append('<div id =' +value.ID+ '>'+value.Title+'</div>');
 	$('#'+value.ID).append('<a class="link" href="'+value.Link+'">('+value.Link+')</a>');
 	$('#'+value.ID).append('<div id="vote"> '+value.Vote+' votes </div>');
-	$('#'+value.ID).append('<span id= "reply'+value.ID+' "onclick=showBox('+value.ID+');showBut('+value.ID+') class="reply">Reply</span>');
+	$('#'+value.ID).append('<div id= "reply'+value.ID+'"onclick=showBox('+value.ID+');showBut('+value.ID+') class="reply">Reply</div>');
+	$('#'+value.ID).append('<div id="comments'+value.ID+'"onclick=loadReplies('+value.ID+') class="commentButton">comments</div>');
 	$('#'+value.ID).append('<button id="replybutton'+value.ID+'"onclick=addReply('+value.ID+');loadReplies('+value.ID+') style="visibility:hidden">Post</button>');
 	$('#'+value.ID).append('<input type="textarea" id="replybox'+value.ID+'"rows="100" cols="200" style="visibility:hidden" value=Reply here class="replybox">');
-	$('#'+value.ID).append('<span id="comments'+value.ID+'"onclick=loadReplies('+value.ID+')>comments</span>');
 	$('#'+value.ID).append('<div id="commentSection'+value.ID+'"></div>');
       });
    });
