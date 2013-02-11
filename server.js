@@ -15,12 +15,12 @@ PORT = 31410;
 var JSONDatabase = {
     "Topics": 
     [
-      {"ID":"12", "Title":"INTERESTING", "Link":"google.com", "Vote":"1", "replies":[]},
-      
-      
-      
-      
-      {"ID":"13", "Title":"AWESOME STUFF", "Link":"reddit.com", "Vote":"2", "replies":[]}
+//       {"ID":"12", "Title":"INTERESTING", "Link":"google.com", "Vote":"1", "replies":[
+// 	{"Text":"aaa","ID":"12x0","Vote":"0","replies":[{"Text":"bbb","ID":"12x0x0","Vote":"0","replies":[]}]}
+//       ]},
+//       
+//       
+//       {"ID":"13", "Title":"AWESOME STUFF", "Link":"reddit.com", "Vote":"2", "replies":[]}
     ],
     "ServerCount" : 0
 }
@@ -58,8 +58,6 @@ function serveFile(filePath, response) {
     });
   });
 }
-
-
 http.createServer(function(request, response) {
   console.log(request.url);
   if (request.url == '/') {
@@ -81,7 +79,15 @@ http.createServer(function(request, response) {
 	topicQuery += data;
       });
       request.on('end', function(){
-	JSONDatabase.Topics.push(qs.parse(topicQuery));
+	var str = qs.parse(topicQuery);
+	var newNode = {
+	  "ID" : str.ID,
+	  "Title" : str.Title,
+	  "Link" : str.Link,
+	  "Vote" : 0,
+	  "replies" : []
+	}
+	JSONDatabase.Topics.push(newNode);
       });
       JSONDatabase.ServerCount++;
     }
@@ -92,19 +98,21 @@ http.createServer(function(request, response) {
       });
       request.on('end', function(){
 	var content = qs.parse(commentQuery)
-	var child = {
-	  "Text" : content.Reply,
-	  "ID" : "reply"+content.ID,
-	  "Votes" : 0,
-	  "replies" : []
-	};
-	var allTopics = JSONDatabase.Topics;
+	var pathIndex = content.ID.split('-');
+	var allReplies = JSONDatabase.Topics[pathIndex[0]];
 	var i = 0;
-	for (i=0; i<allTopics.length; i++){
-	  if (allTopics[i].ID == content.ID){
-	    allTopics[i].replies.push(child);
-	  }
+	for (i=1; i<pathIndex.length; i++){
+	  allReplies = allReplies.replies[pathIndex[i]];
 	}
+	console.log(allReplies);
+	    var child = {
+	      "Text" : content.Reply,
+	      "ID" : content.ID+ "-" +allReplies.replies.length,
+	      "Vote" : "0",
+	      "replies" : []
+	    };
+	    allReplies.replies.push(child);
+	    console.log(allTopics);
       });
     }
   } 

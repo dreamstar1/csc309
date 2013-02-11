@@ -1,44 +1,48 @@
 // TODO: Implement Multilevel Comment, Vote increment, Sort topics based on votes
 
-
 var topicCount = 0;
-function showBox(e) {
-	var id = "replybox" + e;
-	var box = document.getElementById(id);
-	box.style.visibility="visible";
-}
-function showBut(e) {
-	var id = "replybutton" + e;
-	var button = document.getElementById(id);
-	button.style.visibility="visible";
-}
 
-function addReply(e) {
-	var id = "replybox" + e
-	var replyInfo = document.getElementById(id);
-	var querystring = "ID="+e+"&Reply="+replyInfo.value;
-	$.post('/postComment', querystring);
-}
-
-function recurse(ID, sublist){
-  if (sublist.length == 0){
-    return;
-  }
-  else{
-    $('#'+ID).append('<div id='+sublist.ID+'>'+sublist.Text+'</div><br><br>');
-    recurse(sublist.ID, sublist.replies);
-  }
-}
 function loadReplies(topicId){
   var path = '/comments' + topicId;
   $.get(path, function (json){
     var parsed = $.parseJSON(json);
-    var id = 'commentSection'+topicId;
+    var id = 'commentSection'+topicId
     $('#'+id).empty();
     $.each(parsed, function(index, value){
-      recurse(id, value);
+	recurse(topicId, value);
     });
   });
+}
+
+function recurse(ID, sublist){
+  if (sublist.ID==undefined){
+    return;
+  }
+  else{
+      $('#commentSection'+ID).append('<div id='+sublist.ID+'>'+sublist.Text+'</div>');
+      $('#'+sublist.ID).append('<div id="vote"> '+sublist.Vote+' votes </div>');
+      $('#'+sublist.ID).append('<div id="replyButton'+sublist.ID+'"onclick=showCommentBox("'+sublist.ID+'") class="reply">Reply</div>');
+      $('#'+sublist.ID).append('<div id="commentSection'+sublist.ID+'"></div>');
+      $.each(sublist.replies, function(index, value){
+	recurse(sublist.ID, value);
+      });
+  }
+}
+
+function showCommentBox(id){
+  $('#active').remove();
+  $('#'+id).append('<div id="active"></div>'); 
+  $('#active').append('<button id="replybutton" onclick=addReply("'+id+'")>Post</button>');
+  $('#active').append('<textarea id="replybox" rows="2" cols="50"></textarea>');
+}
+
+function addReply(e) {
+	var id = "replybox";
+	var replyInfo = document.getElementById(id);
+	var querystring = "ID="+e+"&Reply="+replyInfo.value;
+	$.post('/postComment', querystring);
+	var topicId = e.split('-')[0];
+	loadReplies(topicId);
 }
 
 function loadTopics() {	
@@ -49,10 +53,8 @@ function loadTopics() {
 	$('#topiclist').append('<div id =' +value.ID+ '>'+value.Title+'</div>');
 	$('#'+value.ID).append('<a class="link" href="'+value.Link+'">('+value.Link+')</a>');
 	$('#'+value.ID).append('<div id="vote"> '+value.Vote+' votes </div>');
-	$('#'+value.ID).append('<div id= "reply'+value.ID+'"onclick=showBox('+value.ID+');showBut('+value.ID+') class="reply">Reply</div>');
-	$('#'+value.ID).append('<div id="comments'+value.ID+'"onclick=loadReplies('+value.ID+') class="commentButton">comments</div>');
-	$('#'+value.ID).append('<button id="replybutton'+value.ID+'"onclick=addReply('+value.ID+');loadReplies('+value.ID+') style="visibility:hidden">Post</button>');
-	$('#'+value.ID).append('<input type="textarea" id="replybox'+value.ID+'"rows="100" cols="200" style="visibility:hidden" value=Reply here class="replybox">');
+	$('#'+value.ID).append('<div id="replyButton' +value.ID+'"onclick=showCommentBox("'+value.ID+'") class="reply">Reply</div>');
+	$('#'+value.ID).append('<div id="commentButton'+value.ID+'"onclick=loadReplies("'+value.ID+'") class="commentButton">comments</div>');
 	$('#'+value.ID).append('<div id="commentSection'+value.ID+'"></div>');
       });
    });
@@ -69,11 +71,10 @@ function addTopic(){
 	  alert("Please provide a valid http link");
 	}
 	else{
-	  var querystring = "ID="+topicCount+"&Title="+topicTitle.value+"&Link="+link.value+"&Vote=0"+"&replies=[]"; 
+	  var querystring = "ID="+topicCount+"&Title="+topicTitle.value+"&Link="+link.value; 
 	  $.post('/postTopic', querystring);
 	  topicCount++;
 	  loadTopics();
 	}
 	
 };
-
