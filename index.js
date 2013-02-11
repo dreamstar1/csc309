@@ -1,7 +1,4 @@
 // TODO: Implement Vote increment, Sort topics based on votes
-
-var topicCount = 0;
-
 function loadReplies(topicId){
   hideCommentBox();
   var path = '/comments' + topicId;
