@@ -19,8 +19,8 @@ function recurse(ID, sublist){
     return;
   }
   else{
-      $('#commentSection'+ID).append('<div id='+sublist.ID+'>'+sublist.Text+'</div>');
-      $('#'+sublist.ID).append('<div id="vote"> '+sublist.Vote+' votes </div>');
+      $('#commentSection'+ID).append('<div id='+sublist.ID+' class="comment">'+sublist.Text+'</div>');
+      $('#'+sublist.ID).append('<div id="vote" class="vote"> '+sublist.Vote+' votes </div>');
       $('#'+sublist.ID).append('<div id="replyButton'+sublist.ID+'"onclick=showCommentBox("'+sublist.ID+'") class="reply">Reply</div>');
       $('#'+sublist.ID).append('<div id="commentSection'+sublist.ID+'"></div>');
       $.each(sublist.replies, function(index, value){
@@ -50,9 +50,9 @@ function loadTopics() {
       var parsed = $.parseJSON(json);
       $('#topiclist').empty();
       $.each(parsed.Topics, function(index, value){
-	$('#topiclist').append('<div id =' +value.ID+ '>'+value.Title+'</div>');
+	$('#topiclist').append('<div id =' +value.ID+ ' class="topic">'+value.Title+'</div>');
 	$('#'+value.ID).append('<a class="link" href="'+value.Link+'">('+value.Link+')</a>');
-	$('#'+value.ID).append('<div id="vote"> '+value.Vote+' votes </div>');
+	$('#'+value.ID).append('<div id="vote" class="vote"> '+value.Vote+' votes </div>');
 	$('#'+value.ID).append('<div id="replyButton' +value.ID+'"onclick=showCommentBox("'+value.ID+'") class="reply">Reply</div>');
 	$('#'+value.ID).append('<div id="commentButton'+value.ID+'"onclick=loadReplies("'+value.ID+'") class="commentButton">comments</div>');
 	$('#'+value.ID).append('<div id="commentSection'+value.ID+'"></div>');
