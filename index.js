@@ -79,16 +79,22 @@ function addReply(e) {
 	loadReplies(e.split('-')[0]);
 }
 
+function mycomparator(a,b) {
+ /**
+ * A function for sorting of a JSON database
+ */
+  return parseInt(b.Vote) - parseInt(a.Vote);
+}
 function refreshPage(){
  /**
  * Refreshes the page by reloading the topiclist
  */
-	//$.post('/sortTopic');
 	$.get('/alltopics', function (json) {
 		var parsed = $.parseJSON(json).Topics;
+		var sorted = parsed.sort(mycomparator);
 		$('#topiclist').empty();
-		for(var i=0; i<parsed.length; i++){
-			loadTopic(i, parsed);
+		for(var i=0; i<sorted.length; i++){
+			loadTopic(i, sorted);
 		}
 	});
 }

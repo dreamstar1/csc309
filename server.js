@@ -19,7 +19,11 @@ PORT = 31160;
  * "ID":"13", "Title":"AWESOME STUFF", "Link":"reddit.com", "Vote":"2", "replies":[]}}
  */
 var JSONDatabase = {
-	"Topics": [] };
+	"Topics": [
+			// {"ID":"0", "Title":"2", "Link":"google.com", "Vote":"0", "replies":[]},
+			// {"ID":"1", "Title":"1", "Link":"google.com", "Vote":"1", "replies":[]}
+			
+	] };
 	
 MIME_TYPES = {
 	'.html': 'text/html',
