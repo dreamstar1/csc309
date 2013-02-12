@@ -140,24 +140,6 @@ http.createServer(function(request, response) {
 				response.end(JSON.stringify(JSONDatabase.Topics));
 			});
 		}
-		else{
-			var original = JSONDatabase.Topics;
-			if (JSONDatabase.Topics.length > 2) {
-				var temp;
-				for (var i = original.length - 1; i > 0; i--) {
-					for (var j = 0; j < i; j++) {
-						if(original[j].Vote < original[j+1].Vote) {
-							temp = original[j];
-							original[j] = original[j+1];
-							original[j+1] = temp;
-						}
-					}
-				}
-				
-			}
-			response.writeHead(200);
-			response.end();
-		}
 	}
 	else if (request.url == '/alltopics')  {
 		response.writeHead(200, {'Content-Type':'text/plain'});
