@@ -77,7 +77,7 @@ function refreshPage(){
  /**
  * Refreshes the page by reloading the topiclist
  */
-	$.post('/sortTopic');
+	//$.post('/sortTopic');
 	$.get('/alltopics', function (json) {
 		var parsed = $.parseJSON(json).Topics;
 		$('#topiclist').empty();
@@ -93,9 +93,8 @@ function loadTopic(e, parsed) {
 	$('#'+parsed[e].ID).append('&nbsp;&nbsp;&nbsp;<a class="link" href="'+parsed[e].Link+'">('+parsed[e].Link+')</a><br>');
 	$('#'+parsed[e].ID).append('<span id="vote'+parsed[e].ID+'" class="vote"> '+parsed[e].Vote+' votes </span>&nbsp;&nbsp;&nbsp;');
 	$('#'+parsed[e].ID).append('<span id="replyButton' +parsed[e].ID+'"onclick=showCommentBox("'+parsed[e].ID+'") class="reply">Reply</span>&nbsp;&nbsp;&nbsp;');
-	$('#'+parsed[e].ID).append('<span id="commentButton'+parsed[e].ID+'"onclick=controlComments("'+parsed[e].ID+'") class="commentButton">'+parsed[e].comments+' comments</span>');
+	$('#'+parsed[e].ID).append('<span id="commentButton'+parsed[e].ID+'"onclick=loadReplies("'+e+'") class="commentButton">'+parsed[e].comments+' comments</span>');
 	$('#'+parsed[e].ID).append('<div id="commentSection'+parsed[e].ID+'"></div>');
-	loadReplies(e);
 }
 
 function addTopic(){

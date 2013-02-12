@@ -1,8 +1,8 @@
 Group Members:
 
-Name:	Eric Wang
-Student #:
-CDF:
+Name:	Zi Zhou Wang
+Student #: 997743919
+CDF: g2zizhou
 
 Name:	Alan Sigal
 Student #:
