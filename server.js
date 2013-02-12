@@ -9,7 +9,7 @@ fs = require('fs');
 path = require('path');
 var qs = require('querystring');
 
-PORT = 31365;
+PORT = 31160;
 
 /* format of Topics....
  * {"ID":"0", "Title":"INTERESTING", "Link":"google.com", "Vote":"1", "replies":[
@@ -140,13 +140,13 @@ http.createServer(function(request, response) {
 				response.end(JSON.stringify(JSONDatabase.Topics));
 			});
 		}
-	/*	else if (request.url == '/sortTopic') {
+		else{
 			var original = JSONDatabase.Topics;
 			if (JSONDatabase.Topics.length > 2) {
 				var temp;
 				for (var i = original.length - 1; i > 0; i--) {
 					for (var j = 0; j < i; j++) {
-						if(original[j].Vote > original[j+1].Vote) {
+						if(original[j].Vote < original[j+1].Vote) {
 							temp = original[j];
 							original[j] = original[j+1];
 							original[j+1] = temp;
@@ -157,7 +157,7 @@ http.createServer(function(request, response) {
 			}
 			response.writeHead(200);
 			response.end();
-		}*/
+		}
 	}
 	else if (request.url == '/alltopics')  {
 		response.writeHead(200, {'Content-Type':'text/plain'});
