@@ -125,7 +125,7 @@ function addTopic(){
 			alert("Please enter link");
 		}
 		else if (link.value.substring(0, 7) !== 'http://' && link.value.substring(0, 8) !== 'https://'){
-			alert("Please provide a valid http link");
+			alert("Pprovide a valid http:// or https:// link");
 		}
 		else{
 			var querystring = "ID="+len+"&Title="+topicTitle.value+"&Link="+link.value; 
