@@ -29,6 +29,9 @@ MIME_TYPES = {
 };
 
 function serveFile(filePath, response) {
+ /**
+ * Reads the file at filePath
+ */
 	path.exists(filePath, function(exists) {
 		if (!exists) {
 			response.writeHead(404);
@@ -142,10 +145,13 @@ http.createServer(function(request, response) {
 		}
 	}
 	else if (request.url == '/alltopics')  {
+	//Return to the client the JSONDatabase for client to append to webpage
 		response.writeHead(200, {'Content-Type':'text/plain'});
 		response.end(JSON.stringify(JSONDatabase));
 	}
 	else if (request.url.substring(0,9) == '/comments'){
+	//Processes the comment with topicID, the request would look like /comment1,
+	//The server will respond by giving client the replies from topic with ID=1
 		var topicID = request.url.substring(9, request.url.length);
 		response.writeHead(200, {'Content-Type':'text/plain'});
 		var allTopics = JSONDatabase.Topics;

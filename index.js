@@ -1,6 +1,9 @@
-// TODO: Implement Vote increment, Sort topics based on votes
+
 var old_id = -1;
 function loadReplies(topicId){
+ /**
+ * Load all the replies inside the topic based on topicId
+ */
 	hideCommentBox();
 	old_id = -1;
 	var path = '/comments' + topicId;
@@ -15,6 +18,9 @@ function loadReplies(topicId){
 }
 
 function recurse(ID, sublist){
+ /**
+ * Recursively append replies to the page
+ */
 	if (sublist.ID==undefined){
 		return;
 	}
@@ -88,6 +94,9 @@ function refreshPage(){
 }
 
 function loadTopic(e, parsed) {	
+ /**
+ * loads the topic indexed by "e" in the JSONDatabase in server
+ */
 	$('#'+parsed[e].ID).remove();
 	$('#topiclist').append('<div id =' +parsed[e].ID+ ' class="topic">'+parsed[e].Title+'</div>');
 	$('#'+parsed[e].ID).append('&nbsp;&nbsp;&nbsp;<a class="link" href="'+parsed[e].Link+'">('+parsed[e].Link+')</a><br>');
@@ -99,7 +108,7 @@ function loadTopic(e, parsed) {
 
 function addTopic(){
  /**
- * 
+ * Adds the topic to the JSONDatabased in the server
  */
 	$.get('/alltopics', function (json) {
 		var parsed = $.parseJSON(json).Topics;
