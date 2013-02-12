@@ -31,16 +31,25 @@ function recurse(ID, sublist){
 }
 
 function voteUp(id) {
+ /**
+ * Post to server with /voteup  request to increase the vote count 
+ */
 	$.post('/voteup', ""+id);
 	refreshPage();
 	loadReplies(id.split('-')[0]);
 }
 
 function hideCommentBox(){
+ /**
+ * Hides the comment box from view 
+ */  
 	$('#active').remove();
 }
 
 function showCommentBox(id){
+ /**
+ * Given an id, show the comment box and the reply button 
+ */
 	hideCommentBox();
 	if (old_id != id) {
 		$('#'+id).append('<div id="active"></div>'); 
@@ -53,6 +62,9 @@ function showCommentBox(id){
 }
 
 function addReply(e) {
+ /**
+ * Post to server with /postreply  request to post the reply
+ */
 	var id = "replybox";
 	var replyInfo = document.getElementById(id);
 	var querystring = "ID="+e+"&Reply="+replyInfo.value;
@@ -62,6 +74,9 @@ function addReply(e) {
 }
 
 function refreshPage(){
+ /**
+ * Refreshes the page by reloading the topiclist
+ */
 	$.post('/sortTopic');
 	$.get('/alltopics', function (json) {
 		var parsed = $.parseJSON(json).Topics;
@@ -84,6 +99,9 @@ function loadTopic(e, parsed) {
 }
 
 function addTopic(){
+ /**
+ * 
+ */
 	$.get('/alltopics', function (json) {
 		var parsed = $.parseJSON(json).Topics;
 		var len = parsed.length;
