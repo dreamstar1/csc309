@@ -81,7 +81,7 @@ function addReply(e) {
 
 function mycomparator(a,b) {
  /**
- * A function for sorting of a JSON database
+ * A function for sorting of a JSON database in descending order by Vote
  */
   return parseInt(b.Vote) - parseInt(a.Vote);
 }
