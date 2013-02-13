@@ -4,14 +4,16 @@ Name:	Zi Zhou Wang
 Student #: 997743919
 CDF: g2zizhou
 
-Name:	Alan Sigal
-Student #:
-CDF:
+Name:	Alon Sigal
+Student #:	998156846
+CDF: g2junhee
 
 Name:	Henry Ku
 Student #: 998551348
 CDF:g2kuhenr
 
-Name:	Simon Song
-Student #:
-CDF: 
+Name:	Simon Joon-Hee Song
+Student #:	998447006
+CDF: g2junhee
+
+
