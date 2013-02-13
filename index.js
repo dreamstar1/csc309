@@ -9,6 +9,7 @@ function loadReplies(topicId){
 	var path = '/comments' + topicId;
 	$.get(path, function (json){
 		var parsed = $.parseJSON(json);
+		var parsed = parsed.sort(mycomparator);
 		var id = 'commentSection'+topicId
 		$('#'+id).empty();
 		$.each(parsed, function(index, value){
